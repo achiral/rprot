@@ -1,13 +1,15 @@
 version: "3.8"
 services:
   rstudio:
-    image: bioc313
+    image: r410bioc313
+    container_name: rprot
+    working_dir: /home/rstudio/rproject
     build:
       context: docker
     ports:
       - "8787:8787"
     environment:
       - PASSWORD=pw
-      - DISABLE_AUTH=false
+      - DISABLE_AUTH=true
     volumes:
       - .:${CONTAINER:-/home/rstudio/rproject}
