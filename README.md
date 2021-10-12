@@ -37,6 +37,7 @@
 
 # copy file from host to container
 `docker cp <host directory> <container name>:<container ditectory>`
+(ex. `docker cp /Users/user/Dropbox/data/. rprot:/home/rstudio/rproject/data/`)
 
 # copy file from container to host
 `docker cp <container name>:<container directory> <host directory>`
