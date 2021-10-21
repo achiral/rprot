@@ -26,7 +26,7 @@
 `docker-compose up --build -d`
 
 # run RStudio from web browser
-`localhost:8787`(`rstudio`/`pw` (default) or `<your_password>`)
+`open http://localhost:8787/`(`rstudio`/`pw` (default) or `<your_password>`)
 
 # stop docker container
 `docker-compose stop` (or `docker-compose down`)

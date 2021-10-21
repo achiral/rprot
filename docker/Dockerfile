@@ -42,9 +42,9 @@ FROM achiral/rbioc:latest
 # # RUN Rscript -e 'BiocManager::install("vector_of_package_names")'
 # # example code (below):
 # RUN Rscript -e "install.packages(c('agricolae', 'BH', 'BiocManager', 'cowplot', 'devtools', 'doSNOW', 'ggcorrplot',\
-#   'ggThemeAssist', 'githubinstall', 'imputeMissings', 'mice', 'minpack.lm', 'missForest', 'mlbench', 'multcomp',\
-#   'openxlsx', 'pacman', 'ranger', 'remotes', 'reshape', 'reshape2', 'randomForest', 'rJava', 'rsvg',\
-#   'rvg', 'sets', 'sgof', 'tidyverse', 'VIM', 'writexl', 'xlsx', 'XLConnect'))"
+#   'ggnewscale', 'ggThemeAssist', 'githubinstall', 'gplots', 'gridExtra', 'gridExtra', 'Hmisc', 'imputeMissings', 'lattice', 'lme4', 'mgcv', 'mice', 'minpack.lm', 'missForest', 'mlbench',\
+#   'multcomp', 'openxlsx', 'pacman', 'palmerpenguins', 'randomForest', 'ranger', 'remotes', 'readxl', 'reshape', 'reshape2', 'rJava', 'rsvg',\
+#   'rvg', 'S4Vectors', 'sandwich', 'scales', 'sets', 'sgof', 'snow', 'stringr', 'survival', 'svglite', 'systemfonts', 'tablaxlsx', 'tidyr', 'tidyverse', 'VIM', 'writexl', 'xlsx', 'XLConnect'))"
 # # RUN install2.r --error --skipinstalled\
 # #     agricolae BH BiocManager cowplot devtools doSNOW ggcorrplot ggThemeAssist\
 # #     githubinstall imputeMissings mice minpack.lm missForest mlbench multcomp \
@@ -56,29 +56,41 @@ FROM achiral/rbioc:latest
 #   && Rscript -e 'BiocManager::install("BaylorEdPsych")'\
 #   && Rscript -e 'BiocManager::install("biomaRt")'\
 #   && Rscript -e 'BiocManager::install("BiocStyle")'\
+#   && Rscript -e 'BiocManager::install("clusterProfiler")'\
 #   && Rscript -e 'BiocManager::install("ComplexHeatmap")'\
 #   && Rscript -e 'BiocManager::install("DEP")'\
 #   && Rscript -e 'BiocManager::install("DESeq")'\
 #   && Rscript -e 'BiocManager::install("DESeq2")'\
 #   && Rscript -e 'BiocManager::install("EnhancedVolcano")'\
+#   && Rscript -e 'BiocManager::install("DOSE")'\
 #   && Rscript -e 'BiocManager::install("enrichR")'\
 #   && Rscript -e 'BiocManager::install("genefilter")'\
 #   && Rscript -e 'BiocManager::install("gmm")'\
 #   && Rscript -e 'BiocManager::install("GO.db")'\
 #   && Rscript -e 'BiocManager::install("gplots")'\
-#   && Rscript -e 'BiocManager::install("limma")'\
 #   && Rscript -e 'BiocManager::install("imsbInfer")'\
+#   && Rscript -e 'BiocManager::install("limma")'\
 #   && Rscript -e 'BiocManager::install("loadTransitonsMSExperiment")'\
+#   && Rscript -e 'BiocManager::install("MeSH.Hsa.eg.db")'\
+#   && Rscript -e 'BiocManager::install("MeSH.Mmu.eg.db")'\
+#   && Rscript -e 'BiocManager::install("MeSHDbi")'\
+#   && Rscript -e 'BiocManager::install("meshes")'\
 #   && Rscript -e 'BiocManager::install("mouse4302.db")'\
+#   && Rscript -e 'BiocManager::install("mmsigdbr")'\
 #   && Rscript -e 'BiocManager::install("MSstats")'\
 #   && Rscript -e 'BiocManager::install("mzR")'\
 #   && Rscript -e 'BiocManager::install("org.Hs.eg.db")'\
 #   && Rscript -e 'BiocManager::install("org.Mm.eg.db")'\
 #   && Rscript -e 'BiocManager::install("PANTHER.db")'\
+#   && Rscript -e 'BiocManager::install("Ppathview")'\
 #   && Rscript -e 'BiocManager::install("PECA")'\
-#   && Rscript -e 'BiocManager::install("proDA")'\
 #   && Rscript -e 'BiocManager::install("RCyjs")'\
+#   && Rscript -e 'BiocManager::install("RCyjs")'\
+#   && Rscript -e 'BiocManager::install("proDA")'\
+#   && Rscript -e 'BiocManager::install("ReactomePA")'\
 #   && Rscript -e 'BiocManager::install("RforProteomics")'\
 #   && Rscript -e 'BiocManager::install("readinteger_binary")'\
 #   && Rscript -e 'BiocManager::install("SummarizedExperiment")'\
 #   && Rscript -e 'BiocManager::install("SWATH2stats")'
+# RUN Rscript -e 'devtools::install_github("GuangchuangYu/DOSE")'
+#   && Rscript -e 'remotes::install_github("Gedevan-Aleksizde/fontregisterer", repos = NULL, type = "source")'

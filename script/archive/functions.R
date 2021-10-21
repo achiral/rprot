@@ -1,5 +1,5 @@
 # functions.R
-
+################################################################################
 detach_all <- function() {
   basic.pkg <- c("package:stats", "package:graphics", "package:grDevices", 
                  "package:utils", "package:datasets", "package:methods", "package:base")
@@ -7,17 +7,86 @@ detach_all <- function() {
   pkg.list <- setdiff(pkg.list, basic.pkg)
   lapply(pkg.list, detach, character.only = TRUE)
 }
-
+################################################################################
 # dir.choose <- function() {
 #   system("osascript -e 'tell app \"RStudio\" to POSIX path of (choose folder with prompt \"Choose Folder:\")' > /tmp/R_folder",
 #          intern = FALSE, ignore.stderr = TRUE)
 #   p <- system("cat /tmp/R_folder && rm -f /tmp/R_folder", intern = TRUE)
 #   return(ifelse(length(p), p, NA))
 # }
-
 ################################################################################
-#perseus like analysis (3 arguments)
-#Log2transform,Imputation(MNAR),Subtraction(Median),1wANOVA,2wANOVA,THSD
+## prepare geneList
+prepare_geneList <- function(x){
+  # prepare geneList
+  dat_gse <- x                                   # substitute
+  geneList <- dat_gse[-1,]                       # log2FC
+  geneList <- as.numeric(geneList)               # chr -> num
+  names(geneList) <- dat_gse[1,]                 # colnames
+  # str(gene_ls)                                 # check structure
+  # names(gene_ls)                               # check names
+  return(geneList)
+}
+################################################################################
+## run GO enrichment analysis
+run_enrichGO <- function(d, 
+                         db = org.Mm.eg.db,         # org.Hs.eg.db
+                         ont = "BP", 　　　     　　# "BP","CC","MF","ALL"
+                         padj = "BH",
+                         p = 0.05,
+                         q = 0.05){
+  geneList <- prepare_geneList(d)
+  gene <- names(geneList)[abs(geneList) > 0]
+  ego <- enrichGO(gene          = gene,             # Entrez Gene ID
+                  # universe    = names(gene_ls),   # background genes
+                  # universe    = dat_rm$ENTREZID,  # Entrez Gene ID detected in analysis
+                  OrgDb         = db,               # org.Hs.eg.db
+                  ont           = ont, 　 　　　　  # "BP","CC","MF","ALL"
+                  pAdjustMethod = padj,
+                  pvalueCutoff  = p,
+                  qvalueCutoff  = q, 
+                  readable      = TRUE 　　　　　   # Gene ID -> gene name
+  )
+}
+################################################################################
+## output svg
+dev_svg <- function(plot = p, file = "out.svg", width = 10, height = 10, pointsize = 5){
+  svg(file            = file,       # file name
+      width           = width,      # inch
+      height          = height,     # inch
+      pointsize       = pointsize
+  )
+  print(plot)                       # plot
+  dev.off()
+}
+## output plot set as svg
+plot_set <- function(e, showCategory = 20, layout = "nicely", filegp = "gp.svg", filebp = "bp.svg", filedp = "dp.svg", filehp = "hp.svg", filemp = "mp.svg", filecp = "cp.svg", 
+                     labeln = "all", # "category", "gene", "all", "none"
+                     label = 0.7, labelg = 0.5, pie = "count"){
+  ## goplot
+  gp <- goplot(e)
+  ## bar plot
+  bp <- barplot(e, drop=TRUE, showCategory=showCategory)
+  ## dot plot
+  dp <- clusterProfiler::dotplot(e, showCategory=showCategory)
+  ## heat plot
+  hp <- heatplot(e, foldChange = geneList, showCategory = showCategory) + ggplot2::coord_flip()
+  ## emapplot
+  # d <- GOSemSim::godata(OrgDb = db, ont = ont)
+  em <- enrichplot::pairwise_termsim(e, semData = d,  method="Wang")
+  mp <- clusterProfiler::emapplot(em, showCategory = showCategory, layout = layout, cex_label_category = label, pie = pie)
+  ## cnet plot
+  cp <- clusterProfiler::cnetplot(e, showCategory = showCategory, foldChange = geneList, layout = layout, colorEdge = TRUE, node_label = labeln, cex_label_category = label, cex_label_gene = labelg, color_category='firebrick', categorySize = "pvalue")
+  ## output svg
+  dev_svg(plot = gp, file = filegp)
+  dev_svg(plot = bp, file = filebp)
+  dev_svg(plot = dp, file = filedp)
+  dev_svg(plot = hp, file = filehp)
+  dev_svg(plot = mp, file = filemp)
+  dev_svg(plot = cp, file = filecp)
+}
+################################################################################
+## perseus like analysis (3 arguments)
+## Log2transform,Imputation(MNAR),Subtraction(Median),1wANOVA,2wANOVA,THSD
 PLA2 <- function(x = read_excel("SWATH.xlsx", 2), 
                  y = read_excel("SWATH.xlsx", 3), 
                  z = read_excel("SWATH.xlsx", 4)){
