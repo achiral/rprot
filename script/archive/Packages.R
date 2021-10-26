@@ -54,13 +54,21 @@ install.packages("cowplot")
 install.packages("data.table")                      # MSstat
 install.packages("devtools")
 install.packages("doSNOW")                          # MSstat
+
+install.packages("ddply")
 install.packages("dplyr")                         # tidyverse, MSstat
+
+install.packages("europepmc")
+
 install.packages("foreach")                         # MSstat
 install.packages("ggcorrplot") 
 install.packages("ggnewscale")                      # enrichment analysis
 install.packages("ggrepel")                         # MSstat
 install.packages("ggplot2")                         # MSstat
 install.packages("ggThemeAssist")
+
+install.packages("ggupset")
+
 install.packages("githubinstall")
 install.packages("gplots")                          # MSstat
 install.packages("gridExtra")                       # svg

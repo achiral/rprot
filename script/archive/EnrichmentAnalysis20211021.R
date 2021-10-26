@@ -15,8 +15,10 @@
 # require(AnnotationHub)           # BioC 3.14 (Nov. 2021, with R-4.2.0)
 require(clusterProfiler)
 require(DOSE)
+require(europepmc)
 require(ggnewscale)           # enrichment map plot
 require(ggplot2)
+require(ggupset)
 require(Hmisc)
 # require(MeSHDbi)                 # BioC 3.14 (Nov. 2021, with R-4.2.0)
 require(meshes)
@@ -48,6 +50,9 @@ getwd()
 # setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/PFC")
 # setwd("~/Dropbox/GitHub/local/Docker/R/rprot")
 setwd("data/Perseus_Like_Analysis/PFC")
+DIR_HOST <- getwd()  # host working directory
+# setwd(DIR_HOST)
+
 ## input data set
 dat <- read_excel("stat.xlsx", 1)
 ################################################################################
@@ -161,177 +166,11 @@ db <- org.Mm.eg.db
 d <- GOSemSim::godata(OrgDb = db, ont = ont)    # emap plot
 MeSHDb <- "MeSH.Mmu.eg.db"                      # MeSHDb <- MeSH.Hsa.eg.db    # BioC 2.14-3.13
 
+
 geneList <- prepare_geneList(dat_p)
 gene <- names(geneList)[abs(geneList) > 0]
-
-ego_p <- run_enrichGO(dat_p, db = db,
-                      ont = ont)                # modify GO term: "BP","CC","MF","ALL"
-ego_psim <- clusterProfiler::simplify(ego_p)    # remove redundancy
-plot_set(ego_p, 
-         showCategory = showCategory,           # modify showCategory
-         filegp = "gp_ego_p.svg",               # filegp = "gp.svg"
-         filebp = "bp_ego_p.svg",               # filebp = "bp.svg"
-         filedp = "dp_ego_p.svg",               # filedp = "dp.svg"
-         filehp = "hp_ego_p.svg",               # filehp = "hp.svg"
-         filemp = "mp_ego_p.svg",               # filemp = "mp.svg"
-         filecp = "cp_ego_p.svg")               # filecp = "cp.svg"
-plot_set(ego_psim, 
-         showCategory = showCategory,           # modify showCategory 
-         filegp = "gp_ego_psim.svg",            # filegp = "gp.svg"
-         filebp = "bp_ego_psim.svg",            # filebp = "bp.svg"
-         filedp = "dp_ego_psim.svg",            # filedp = "dp.svg"
-         filehp = "hp_ego_psim.svg",            # filehp = "hp.svg"
-         filemp = "mp_ego_psim.svg",            # filemp = "mp.svg"
-         filecp = "cp_ego_psim.svg")            # filecp = "cp.svg"
-
-## 保留 #####
-geneList <- prepare_geneList(dat_c)
-ego_c <- run_enrichGO(dat_c, 
-                      ont = ont)                # modify GO term: "BP","CC","MF","ALL"
-ego_csim <- clusterProfiler::simplify(ego_c)    # remove redundancy
-plot_set(ego_c, 
-         showCategory = showCategory,           # modify showCategory 
-         filegp = "gp_ego_c.svg",               # filegp = "gp.svg"
-         filebp = "bp_ego_c.svg",               # filebp = "bp.svg"
-         filedp = "dp_ego_c.svg",               # filedp = "dp.svg"
-         filehp = "hp_ego_c.svg")               # filehp = "hp.svg"
-plot_set(ego_csim, 
-         showCategory = showCategory,           # modify showCategory 
-         filegp = "gp_ego_csim.svg",            # filegp = "gp.svg"
-         filebp = "bp_ego_csim.svg",            # filebp = "bp.svg"
-         filedp = "dp_ego_csim.svg",            # filedp = "dp.svg"
-         filehp = "hp_ego_cs.svg")              # filehp = "hp.svg"   
-
-geneList <- prepare_geneList(dat_pc)
-ego_pc <- run_enrichGO(dat_pc, 
-                       ont = ont)               # modify GO term: "BP","CC","MF","ALL"
-ego_pcsim <- clusterProfiler::simplify(ego_pc)  # remove redundancy
-plot_set(ego_pc, 
-         showCategory = showCategory,           # modify showCategory 
-         filegp = "gp_ego_pc.svg",              # filegp = "gp.svg"
-         filebp = "bp_ego_pc.svg",              # filebp = "bp.svg"
-         filedp = "dp_ego_pc.svg",              # filedp = "dp.svg"
-         filehp = "hp_ego_pc.svg")              # filehp = "hp.svg"
-plot_set(ego_pcsim, 
-         showCategory = showCategory,           # modify showCategory 
-         filegp = "gp_ego_pcsim.svg",           # filegp = "gp.svg"
-         filebp = "bp_ego_pcsim.svg",           # filebp = "bp.svg"
-         filedp = "dp_ego_pcsim.svg",           # filedp = "dp.svg"
-         filehp = "hp_ego_pcsim.svg")           # filehp = "hp.svg"
-
-geneList <- prepare_geneList(dat_ps)
-ego_ps <- run_enrichGO(dat_ps, 
-                       ont = ont)               # modify GO term: "BP","CC","MF","ALL"
-ego_pssim <- clusterProfiler::simplify(ego_ps)  # remove redundancy
-plot_set(ego_ps, 
-         showCategory = showCategory,           # modify showCategory 
-         filegp = "gp_ego_ps.svg",              # filegp = "gp.svg"
-         filebp = "bp_ego_ps.svg",              # filebp = "bp.svg"
-         filedp = "dp_ego_ps.svg",              # filedp = "dp.svg"
-         filehp = "hp_ego_ps.svg")              # filehp = "hp.svg"
-plot_set(ego_pssim, 
-         showCategory = showCategory,           # modify showCategory 
-         filegp = "gp_ego_pssim.svg",           # filegp = "gp.svg"
-         filebp = "bp_ego_pssim.svg",           # filebp = "bp.svg"
-         filedp = "dp_ego_pssim.svg",           # filedp = "dp.svg"
-         filehp = "hp_ego_pssim.svg")           # filehp = "hp.svg"
-
-geneList <- prepare_geneList(dat_ud)
-ego_ud <- run_enrichGO(dat_ud, 
-                       ont = ont)               # modify GO term: "BP","CC","MF","ALL"
-ego_udsim <- clusterProfiler::simplify(ego_ud)  # remove redundancy
-plot_set(ego_ud, 
-         showCategory = showCategory,           # modify showCategory 
-         filegp = "gp_ego_ud.svg",              # filegp = "gp.svg"
-         filebp = "bp_ego_ud.svg",              # filebp = "bp.svg"
-         filedp = "dp_ego_ud.svg",              # filedp = "dp.svg"
-         filehp = "hp_ego_ud.svg")              # filehp = "hp.svg"
-plot_set(ego_udsim, 
-         showCategory = showCategory,           # modify showCategory 
-         filegp = "gp_ego_udsim.svg",           # filegp = "gp.svg"
-         filebp = "bp_ego_udsim.svg",           # filebp = "bp.svg"
-         filedp = "dp_ego_udsim.svg",           # filedp = "dp.svg"
-         filehp = "hp_ego_udsim.svg")           # filehp = "hp.svg"
-
-geneList <- prepare_geneList(dat_du)
-ego_du <- run_enrichGO(dat_du, 
-                       ont = ont)               # modify GO term: "BP","CC","MF","ALL"
-ego_dusim <- clusterProfiler::simplify(ego_du)  # remove redundancy
-plot_set(ego_du, 
-         showCategory = showCategory,           # modify showCategory 
-         filegp = "gp_ego_du.svg",              # filegp = "gp.svg"
-         filebp = "bp_ego_du.svg",              # filebp = "bp.svg"
-         filedp = "dp_ego_du.svg",              # filedp = "dp.svg"
-         filehp = "hp_ego_du.svg")              # filehp = "hp.svg"
-plot_set(ego_dusim, 
-         showCategory = showCategory,           # modify showCategory 
-         filegp = "gp_ego_dusim.svg",           # filegp = "gp.svg"
-         filebp = "bp_ego_dusim.svg",           # filebp = "bp.svg"
-         filedp = "dp_ego_dusim.svg",           # filedp = "dp.svg"
-         filehp = "hp_ego_dusim.svg")           # filehp = "hp.svg"
-
-geneList <- prepare_geneList(dat_uu)
-ego_uu <- run_enrichGO(dat_uu, 
-                       ont = ont)               # modify GO term: "BP","CC","MF","ALL"
-ego_uusim <- clusterProfiler::simplify(ego_uu)  # remove redundancy
-plot_set(ego_uu, 
-         showCategory = showCategory,           # modify showCategory 
-         filegp = "gp_ego_uu.svg",              # filegp = "gp.svg"
-         filebp = "bp_ego_uu.svg",              # filebp = "bp.svg"
-         filedp = "dp_ego_uu.svg",              # filedp = "dp.svg"
-         filehp = "hp_ego_uu.svg")              # filehp = "hp.svg"
-plot_set(ego_uusim, 
-         showCategory = showCategory,           # modify showCategory 
-         filegp = "gp_ego_uusim.svg",           # filegp = "gp.svg"
-         filebp = "bp_ego_uusim.svg",           # filebp = "bp.svg"
-         filedp = "dp_ego_uusim.svg",           # filedp = "dp.svg"
-         filehp = "hp_ego_uusim.svg")           # filehp = "hp.svg"
-
-geneList <- prepare_geneList(dat_dd)
-ego_dd <- run_enrichGO(dat_dd, 
-                       ont = ont)               # modify GO term: "BP","CC","MF","ALL"
-ego_ddsim <- clusterProfiler::simplify(ego_dd)  # remove redundancy
-plot_set(ego_dd, 
-         showCategory = showCategory,           # modify showCategory 
-         filegp = "gp_ego_dd.svg",              # filegp = "gp.svg"
-         filebp = "bp_ego_dd.svg",              # filebp = "bp.svg"
-         filedp = "dp_ego_dd.svg",              # filedp = "dp.svg"
-         filehp = "hp_ego_dd.svg")              # filehp = "hp.svg"
-plot_set(ego_ddsim, 
-         showCategory = showCategory,           # modify showCategory 
-         filegp = "gp_ego_ddsim.svg",           # filegp = "gp.svg"
-         filebp = "bp_ego_ddsim.svg",           # filebp = "bp.svg"
-         filedp = "dp_ego_ddsim.svg",           # filedp = "dp.svg"
-         filehp = "hp_ego_ddsim.svg")           # filehp = "hp.svg"
-################################################################################
-## 99. visualize enriched GO terms function modification #####
-################################################################################
-## output plot set as svg #####
-plot_set <- function(e, showCategory = 20, layout = "nicely", filegp = "gp.svg", filebp = "bp.svg", filedp = "dp.svg", filehp = "hp.svg", filemp = "mp.svg", filecp = "cp.svg", 
-                     labeln = "all", # "category", "gene", "all", "none"
-                     label = 0.7, labelg = 0.5, pie = "count"){
-  ## goplot
-  gp <- goplot(e)
-  ## bar plot
-  bp <- barplot(e, drop=TRUE, showCategory=showCategory)
-  ## dot plot
-  dp <- clusterProfiler::dotplot(e, showCategory=showCategory)
-  ## heat plot
-  hp <- heatplot(e, foldChange = geneList, showCategory = showCategory) + ggplot2::coord_flip()
-  ## emapplot
-  # d <- GOSemSim::godata(OrgDb = db, ont = ont)
-  em <- enrichplot::pairwise_termsim(e, semData = d,  method="Wang")
-  mp <- clusterProfiler::emapplot(em, showCategory = showCategory, layout = layout, cex_label_category = label, pie = pie)
-  ## cnet plot
-  cp <- clusterProfiler::cnetplot(e, showCategory = showCategory, foldChange = geneList, layout = layout, colorEdge = TRUE, node_label = labeln, cex_label_category = label, cex_label_gene = labelg, color_category='firebrick', categorySize = "pvalue")
-  ## output svg
-  dev_svg(plot = gp, file = filegp)
-  dev_svg(plot = bp, file = filebp)
-  dev_svg(plot = dp, file = filedp)
-  dev_svg(plot = hp, file = filehp)
-  dev_svg(plot = mp, file = filemp)
-  dev_svg(plot = cp, file = filecp)
-}
+ego_p <- run_enrichGO(dat_p, db = db, ont = ont)  # modify GO term: "BP","CC","MF","ALL"
+ego_psim <- clusterProfiler::simplify(ego_p)      # remove redundancy
 ################################################################################
 ## 6. KEGG pathway analysis #####
 ################################################################################
@@ -350,10 +189,10 @@ ek2 <- enrichKEGG(gene = eg2up[,2],   # gene = eg2np[,2]
                   keyType='uniprot',  # keyType='ncbi-proteinid'
                   pvalueCutoff = 0.05,
                   qvalueCutoff = 1)
-
 ## ID conversion #####
 ek3 <- setReadable(ek2, OrgDb = db, keyType="UNIPROT")
 head(summary(ek3))
+
 ## KEGG module over-representation analysis
 mek <- enrichMKEGG(gene = gene,
                    organism = 'mmu',
@@ -369,42 +208,25 @@ mek2 <- enrichMKEGG(gene = eg2up[,2],   # gene = eg2np[,2]
 mek3 <- setReadable(mek2, OrgDb = db, keyType="UNIPROT")
 head(summary(mek3))
 ################################################################################
-## 99. Visualize enriched KEGG pathways #####
-################################################################################
-## Visualize enriched KEGG pathways
-# KEGG pathway over-representation analysis
-browseKEGG(ek,"mmu04721")
-mmu04721 <- pathview(gene.data  = geneList,
-                     pathway.id = "mmu04721",
-                     species    = "mmu",
-                     # limit      = list(gene=max(abs(geneList)), cpd=1)  # limit = list(gene=2, cpd=1)
-                     low = list(gene = "green", cpd = "blue"), 
-                     mid = list(gene = "yellow", cpd = "white"), 
-                     high = list(gene = "red", cpd = "orange"))
-barplot(ek, drop=FALSE, showCategory = showCategory)
-dotplot(ek)
-heatplot(ek, foldChange = geneList, showCategory = showCategory) + ggplot2::coord_flip()  # DENTREZID, color
-heatplot(ek2, foldChange = geneList, showCategory = showCategory) + ggplot2::coord_flip() # uniprot, gray
-heatplot(ek3, foldChange = geneList, showCategory = showCategory) + ggplot2::coord_flip() # gene name, gray
-cnetplot(ek, categorySize="pvalue", foldChange=geneList) # categorySize="geneNum", DENTREZID, color
-cnetplot(ek3, categorySize="pvalue", foldChange=geneList) # categorySize="geneNum", gene name, gray
-# KEGG module over-representation analysis
-barplot(mek, drop=FALSE, showCategory = showCategory)
-dotplot(mek)
-heatplot(mek, foldChange = geneList, showCategory = showCategory) + ggplot2::coord_flip()  # DENTREZID, color
-heatplot(mek2, foldChange = geneList, showCategory = showCategory) + ggplot2::coord_flip() # uniprot, gray
-heatplot(mek3, foldChange = geneList, showCategory = showCategory) + ggplot2::coord_flip()    # gene name, gray
-cnetplot(mek, categorySize="pvalue", foldChange=geneList) # categorySize="geneNum", DENTREZID, color
-cnetplot(mek3, categorySize="pvalue", foldChange=geneList) # categorySize="geneNum", gene name, gray
-################################################################################
 ## 7. WikiPathways analysis(https://yulab-smu.top/biomedical-knowledge-mining-book/wikipathways-analysis.html) #####
 ################################################################################
 get_wp_organisms()
 ## WikiPathways over-representation analysis
 ewp <- enrichWP(gene, organism = "Mus musculus")
 head(ewp@result)
-## visualization???
-# ここ保留
+ewp2 <- setReadable(ewp, OrgDb = db, keyType="ENTREZID")
+head(ewp2@result)
+
+## file save directory #####
+## make directory to save images of enrichment analysis
+setwd(DIR_HOST)        # move to host working directory
+if(!dir.exists("p")){dir.create("p")}
+setwd("./p")
+if(!dir.exists("wiki")){dir.create("wiki")}
+setwd("./wiki")
+
+## unknown to visuaize the results of wiki pathway analysis
+setwd(DIR_HOST)        # move to host working directory
 ################################################################################
 ## 8. reactome pathway analysis(https://yulab-smu.top/biomedical-knowledge-mining-book/reactomepa.html) #####
 ################################################################################
@@ -417,30 +239,255 @@ er <- enrichPathway(gene = gene,                   # entrez gene id
                     # minGSSize = 3,               # 10
                     # maxGSSize = 500,
                     readable = TRUE                # gene ID -> gene Name
-                    )
+)
 head(er)
+################################################################################
 
-## Pathway Visualization
-viewPathway("Transmission across Chemical Synapses",
-            organism = "mouse",                          # "human"
-            readable = TRUE, 
-            foldChange = geneList)
-## visualization
-barplot(er, showCategory = showCategory, x = "Count")
-dotplot(er, showCategory = showCategory)
-heatplot(er, foldChange = geneList, showCategory = showCategory) + ggplot2::coord_flip()
-cnetplot(er, foldChange = geneList, showCategory = showCategory, categorySize = "pvalue")
-## reactome pathway map
-pathwayID <- er[1]$ID
-URL <- paste0("https://reactome.org/ContentService/exporter/diagram/", pathwayID, ".png")
-output_filename <- paste0(pathwayID, ".png")
-download.file(URL, output_filename)
-## highlighted map
-genelist <- str_split(er[1]$geneID, "/")[[1]]
-genelist.str <- str_c(genelist, collapse = ",")
-URL <- paste0("https://reactome.org/ContentService/exporter/diagram/", pathwayID, ".png", "?flg=", genelist.str)
-output_filename <- paste0(pathwayID, "_decorated",".png")
-download.file(URL, output_filename)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################
+## 99. Visualize enriched pathways #####
+################################################################################
+## Visualize enriched GO term #####
+## file save directory #####
+## make directory to save images of enrichment analysis
+setwd(DIR_HOST)        # move to host working directory
+if(!dir.exists("p")){dir.create("p")}
+setwd("./p")
+if(!dir.exists("go")){dir.create("go")}
+setwd("./go")
+
+plot_set_go(ego_p, 
+            showCategory = showCategory,             # modify showCategory
+            filegp = "gp_ego_p.svg",                 # filegp = "gp.svg"
+            filebp = "bp_ego_p.svg",                 # filebp = "bp.svg"
+            filedp = "dp_ego_p.svg",                 # filedp = "dp.svg"
+            filehp = "hp_ego_p.svg",                 # filehp = "hp.svg"
+            filetp = "tp_ego_p.svg",                 # filetp = "tp.svg"
+            filemp = "mp_ego_p.svg",                 # filemp = "mp.svg"
+            fileusp = "usp_ego_p.svg",               # fileusp = "usp.svg"
+            filecp = "cp_ego_p.svg")                 # filecp = "cp.svg"
+
+
+## pubmed trend of enriched terms #####
+terms <- ego_p$Description[1:5]
+p <- enrichplot::pmcplot(terms, 2015:2020)
+p2 <- enrichplot::pmcplot(terms, 2015:2020, proportion=FALSE)
+plot_grid(p, p2, ncol=2)
+
+setwd(DIR_HOST)        # move to host working directory
+getwd()
+
+## Visualize enriched KEGG pathways #####
+## file save directory #####
+## make directory to save images of enrichment analysis
+setwd(DIR_HOST)        # move to host working directory
+if(!dir.exists("p")){dir.create("p")}
+setwd("./p")
+if(!dir.exists("kegg")){dir.create("kegg")}
+setwd("./kegg")
+
+plot_set_ek(ek,
+            showCategory = showCategory,            # modify showCategory
+            filebp = "bp_ek_p.svg",                 # filebp = "bp.svg"
+            filedp = "dp_ek_p.svg",                 # filedp = "dp.svg"
+            filehp = "hp_ek_p.svg",                 # filehp = "hp.svg"
+            fileusp = "usp_ek_p.svg",               # fileusp = "usp.svg"
+            filecp = "cp_ek_p.svg")                 # filecp = "cp.svg"
+plot_set_ek(ek2,
+            showCategory = showCategory,            # modify showCategory
+            filebp = "bp_ek_p.svg",                 # filebp = "bp.svg"
+            filedp = "dp_ek_p.svg",                 # filedp = "dp.svg"
+            filehp = "hp_ek2_p.svg",                 # filehp = "hp.svg"
+            fileusp = "usp_ek_p.svg",               # fileusp = "usp.svg"
+            filecp = "cp_ek2_p.svg")                 # filecp = "cp.svg"
+plot_set_ek(ek3,
+            showCategory = showCategory,            # modify showCategory
+            filebp = "bp_ek_p.svg",                 # filebp = "bp.svg"
+            filedp = "dp_ek_p.svg",                 # filedp = "dp.svg"
+            filehp = "hp_ek3_p.svg",                 # filehp = "hp.svg"
+            fileusp = "usp_ek_p.svg",               # fileusp = "usp.svg"
+            filecp = "cp_ek3_p.svg")                 # filecp = "cp.svg"
+
+plot_set_ek(mek,
+            showCategory = showCategory,            # modify showCategory
+            filebp = "bp_mek_p.svg",                 # filebp = "bp.svg"
+            filedp = "dp_mek_p.svg",                 # filedp = "dp.svg"
+            filehp = "hp_mek_p.svg",                 # filehp = "hp.svg"
+            fileusp = "usp_mek_p.svg",               # fileusp = "usp.svg"
+            filecp = "cp_mek_p.svg")                 # filecp = "cp.svg"
+plot_set_ek(mek2,
+            showCategory = showCategory,            # modify showCategory
+            filebp = "bp_mek_p.svg",                 # filebp = "bp.svg"
+            filedp = "dp_mek_p.svg",                 # filedp = "dp.svg"
+            filehp = "hp_mek2_p.svg",                 # filehp = "hp.svg"
+            fileusp = "usp_mek_p.svg",               # fileusp = "usp.svg"
+            filecp = "cp_mek2_p.svg")                 # filecp = "cp.svg"
+plot_set_ek(mek3,
+            showCategory = showCategory,            # modify showCategory
+            filebp = "bp_mek_p.svg",                 # filebp = "bp.svg"
+            filedp = "dp_mek_p.svg",                 # filedp = "dp.svg"
+            filehp = "hp_mek3_p.svg",                 # filehp = "hp.svg"
+            fileusp = "usp_mek_p.svg",               # fileusp = "usp.svg"
+            filecp = "cp_mek3_p.svg")                 # filecp = "cp.svg"
+
+## KEGG pathway over-representation analysis #####
+# browseKEGG(ek,"mmu04721")
+# mmu04721 <- pathview(gene.data  = geneList,
+#                      pathway.id = "mmu04721",
+#                      species    = "mmu",
+#                      # limit      = list(gene=max(abs(geneList)), cpd=1)  # limit = list(gene=2, cpd=1)
+#                      low = list(gene = "green", cpd = "blue"), 
+#                      mid = list(gene = "yellow", cpd = "white"), 
+#                      high = list(gene = "red", cpd = "orange"))
+
+## Visualize enriched reactome pathways
+## file save directory #####
+## make directory to save images of enrichment analysis
+setwd(DIR_HOST)        # move to host working directory
+if(!dir.exists("p")){dir.create("p")}
+setwd("./p")
+if(!dir.exists("reac")){dir.create("reac")}
+setwd("./reac")
+getwd()
+
+plot_set_er(er, 
+            showCategory = showCategory,             # modify showCategory
+            filebp = "bp_er_p.svg",                 # filebp = "bp.svg"
+            filedp = "dp_er_p.svg",                 # filedp = "dp.svg"
+            filehp = "hp_er_p.svg",                 # filehp = "hp.svg"
+            filetp = "tp_er_p.svg",                 # filetp = "tp.svg"
+            filemp = "mp_er_p.svg",                 # filemp = "mp.svg"
+            fileusp = "usp_er_p.svg",               # fileusp = "usp.svg"
+            filecp = "cp_er_p.svg")                 # filecp = "cp.svg"
+
+## Pathway Visualization #####
+# viewPathway("Transmission across Chemical Synapses",
+#             organism = "mouse",                          # "human"
+#             readable = TRUE, 
+#             foldChange = geneList)
+
+## reactome pathway map #####
+# pathwayID <- er[1]$ID
+# URL <- paste0("https://reactome.org/ContentService/exporter/diagram/", pathwayID, ".png")
+# output_filename <- paste0(pathwayID, ".png")
+# download.file(URL, output_filename)
+## highlighted map #####
+# genelist <- str_split(er[1]$geneID, "/")[[1]]
+# genelist.str <- str_c(genelist, collapse = ",")
+# URL <- paste0("https://reactome.org/ContentService/exporter/diagram/", pathwayID, ".png", "?flg=", genelist.str)
+# output_filename <- paste0(pathwayID, "_decorated",".png")
+# download.file(URL, output_filename)
+
+
+
+
+
+
+
+
+
+
+
+#####
+
+plot_set(ego_psim, 
+         showCategory = showCategory,             # modify showCategory 
+         filegp = "gp_ego_psim.svg",              # filegp = "gp.svg"
+         filebp = "bp_ego_psim.svg",              # filebp = "bp.svg"
+         filedp = "dp_ego_psim.svg",              # filedp = "dp.svg"
+         filehp = "hp_ego_psim.svg",              # filehp = "hp.svg"
+         filemp = "mp_ego_psim.svg",              # filemp = "mp.svg"
+         filecp = "cp_ego_psim.svg")              # filecp = "cp.svg"
+setwd(DIR_HOST)        # move to host working directory
+
+
+
+
+
+
+
+
+
+## 保留 #####
+geneList <- prepare_geneList(dat_c)
+gene <- names(geneList)[abs(geneList) > 0]
+ego_c <- run_enrichGO(dat_c, ont = ont)           # modify GO term: "BP","CC","MF","ALL"
+ego_csim <- clusterProfiler::simplify(ego_c)    # remove redundancy
+
+
+
+geneList <- prepare_geneList(dat_pc)
+gene <- names(geneList)[abs(geneList) > 0]
+ego_pc <- run_enrichGO(dat_pc, ont = ont)       # modify GO term: "BP","CC","MF","ALL"
+ego_pcsim <- clusterProfiler::simplify(ego_pc)  # remove redundancy
+
+
+
+
+geneList <- prepare_geneList(dat_ps)
+gene <- names(geneList)[abs(geneList) > 0]
+ego_ps <- run_enrichGO(dat_ps, ont = ont)       # modify GO term: "BP","CC","MF","ALL"
+ego_pssim <- clusterProfiler::simplify(ego_ps)  # remove redundancy
+
+
+geneList <- prepare_geneList(dat_ud)
+gene <- names(geneList)[abs(geneList) > 0]
+ego_ud <- run_enrichGO(dat_ud, ont = ont)       # modify GO term: "BP","CC","MF","ALL"
+ego_udsim <- clusterProfiler::simplify(ego_ud)  # remove redundancy
+
+
+
+geneList <- prepare_geneList(dat_du)
+gene <- names(geneList)[abs(geneList) > 0]
+ego_du <- run_enrichGO(dat_du, ont = ont)       # modify GO term: "BP","CC","MF","ALL"
+ego_dusim <- clusterProfiler::simplify(ego_du)  # remove redundancy
+
+
+
+geneList <- prepare_geneList(dat_uu)
+gene <- names(geneList)[abs(geneList) > 0]
+ego_uu <- run_enrichGO(dat_uu, ont = ont)       # modify GO term: "BP","CC","MF","ALL"
+ego_uusim <- clusterProfiler::simplify(ego_uu)  # remove redundancy
+
+
+
+
+geneList <- prepare_geneList(dat_dd)
+gene <- names(geneList)[abs(geneList) > 0]
+ego_dd <- run_enrichGO(dat_dd, ont = ont)       # modify GO term: "BP","CC","MF","ALL"
+ego_ddsim <- clusterProfiler::simplify(ego_dd)  # remove redundancy
+
+
+
+
+
+
+################################################################################
+
+
+
+
+
 ################################################################################
 ## 9. Disease enrichment analysis(https://yulab-smu.top/biomedical-knowledge-mining-book/dose-enrichment.html) #####
 ################################################################################
@@ -449,9 +496,11 @@ download.file(URL, output_filename)
 ## 10. MeSH enrichment analysis(https://yulab-smu.top/biomedical-knowledge-mining-book/meshes-enrichment.html) #####
 ################################################################################
 ## MeSH over-representation analysis
+str(geneList)
 de <- names(geneList)[1:100]
+de <- names(geneList)
 emesh <- enrichMeSH(de, MeSHDb = MeSHDb, 
-                    database = 'gendoo',        # 'gendoo', 'gene2pubmed' or 'RBBH'
+                    database = 'gendoo',      # 'gendoo', 'gene2pubmed' or 'RBBH'
                     category = 'C',           # "A", "B", "C"(Diseases), "D", "E", "F", "G"(Phenomena and Processes), "H", "I", "J", "K", "L","M", "N", "V", "Z"
                     # universe,
                     # minGSSize = 10, maxGSSize = 500,
@@ -689,6 +738,23 @@ dotplot(formula_res, x="group") + facet_grid(~othergroup)
 ## MSigDb GSEA
 # emsig2_C3 <- GSEA(geneList, TERM2GENE = C3_t2g)
 # head(emsig2_C3)
+
+
+
+
+## visualization of GSEA(https://yulab-smu.top/biomedical-knowledge-mining-book/enrichplot.html) #####
+## ridgeline plot for expression distribution of GSEA result
+# ridgeplot(edo2)
+# enrichplot::gseaplot2(edo2, geneSetID = 1, title = edo2$Description[1])
+# gsearank(edo2, 1, title = edo2[1, "Description"])
+# pp <- lapply(1:3, function(i) {
+#   anno <- edo2[i, c("NES", "pvalue", "p.adjust")]
+#   lab <- paste0(names(anno), "=",  round(anno, 3), collapse="\n")
+#   
+#   gsearank(edo2, i, edo2[i, 2]) + xlab(NULL) +ylab(NULL) +
+#     annotate("text", 10000, edo2[i, "enrichmentScore"] * .75, label = lab, hjust=0, vjust=0)
+# })
+# plot_grid(plotlist=pp, ncol=1)
 ################################################################################
 ## 9999. note #####
 ################################################################################

@@ -62,8 +62,8 @@ dev_svg <- function(plot = p, file = "out.svg", width = 10, height = 10, pointsi
 ## output plot set as svg #####
 ################################################################################
 ## enrichment analysis #####
-plot_set_go <- function(e, showCategory = 20, layout = "nicely", 
-                     filegp = "gp.svg", filebp = "bp.svg", filedp = "dp.svg", filedp2 = "dp2.svg", filehp = "hp.svg", 
+plot_set <- function(e, showCategory = 20, layout = "nicely", 
+                     filegp = "gp.svg", filebp = "bp.svg", filedp = "dp.svg", filehp = "hp.svg", 
                      filetp = "tp.svg", filemp = "mp.svg", fileusp = "usp.svg", filecp = "cp.svg", 
                      nCl = 5, ccat = 0.5,
                      labeln = "all", # "category", "gene", "all", "none"
@@ -77,7 +77,6 @@ plot_set_go <- function(e, showCategory = 20, layout = "nicely",
   ## dot plot
   # dp <- try(clusterProfiler::dotplot(e, showCategory=showCategory, x = "qscore") + ggtitle("Dotplot"))
   dp <- try(clusterProfiler::dotplot(e, showCategory=showCategory) + ggtitle("Dotplot"))
-  dp2 <- try(clusterProfiler::dotplot(e, x="group") + facet_grid(~othergroup) + ggtitle("Dotplot"))
   ## heat plot
   hp <- try(heatplot(e, foldChange = geneList, showCategory = showCategory) + ggplot2::coord_flip() + ggtitle("Heatplot"))
   ## tree plot
@@ -95,7 +94,158 @@ plot_set_go <- function(e, showCategory = 20, layout = "nicely",
   try(dev_svg(plot = gp, file = filegp))
   try(dev_svg(plot = bp, file = filebp))
   try(dev_svg(plot = dp, file = filedp))
-  try(dev_svg(plot = dp2, file = filedp2))
+  try(dev_svg(plot = hp, file = filehp))
+  try(dev_svg(plot = tp, file = filetp))
+  try(dev_svg(plot = mp, file = filemp))
+  try(dev_svg(plot = usp, file = fileusp))
+  try(dev_svg(plot = cp, file = filecp))
+}
+## KEGG pathway enrichment analysis #####
+plot_set_ek <- function(e, showCategory = 20, layout = "nicely", 
+                        filebp = "bp.svg", filedp = "dp.svg", filehp = "hp.svg", 
+                        fileusp = "usp.svg", filecp = "cp.svg", 
+                        nCl = 5, ccat = 0.5,
+                        labeln = "all", # "category", "gene", "all", "none"
+                        label = 0.7, labelg = 0.5, pie = "count"){
+  e <- mutate(e, qscore = -log(p.adjust, base=10))
+  ## bar plot
+  bp <- barplot(e, drop=TRUE, showCategory=showCategory, x = "qscore") + ggtitle("Barplot for KEGG ORA")
+  ## dot plot
+  dp <- clusterProfiler::dotplot(e, showCategory=showCategory) + ggtitle("Dotplot for KEGG ORA")
+  ## heat plot
+  hp <- heatplot(e, foldChange = geneList, showCategory = showCategory) + ggplot2::coord_flip() + ggtitle("Heatplot for KEGG ORA")
+  ## upsetplot
+  usp <- enrichplot::upsetplot(e) + ggtitle("Upset plot for KEGG ORA")
+  ## cnet plot
+  cp <- clusterProfiler::cnetplot(e, showCategory = showCategory, foldChange = geneList, layout = layout, colorEdge = TRUE, node_label = labeln, cex_category = ccat, cex_label_category = label, cex_label_gene = labelg, color_category='firebrick', categorySize = "pvalue") + ggtitle("Gene-Concept Network plot for KEGG ORA")
+  ## output svg
+  dev_svg(plot = bp, file = filebp)
+  dev_svg(plot = dp, file = filedp)
+  dev_svg(plot = hp, file = filehp)
+  dev_svg(plot = usp, file = fileusp)
+  dev_svg(plot = cp, file = filecp)
+}
+
+## Reactome pathway enrichment analysis #####
+plot_set_er <- function(e, showCategory = 20, layout = "nicely", 
+                        filebp = "bp.svg", filedp = "dp.svg", filehp = "hp.svg", 
+                        filetp = "tp.svg", filemp = "mp.svg", fileusp = "usp.svg", filecp = "cp.svg", 
+                        nCl = 5, ccat = 0.5,
+                        labeln = "all", # "category", "gene", "all", "none"
+                        label = 0.7, labelg = 0.5, pie = "count"){
+  e <- mutate(e, qscore = -log(p.adjust, base=10))
+  ## bar plot
+  bp <- barplot(e, drop=TRUE, showCategory=showCategory, x = "qscore") + ggtitle("Barplot for ReactomePA ORA")
+  ## dot plot
+  dp <- clusterProfiler::dotplot(e, showCategory=showCategory) + ggtitle("Dotplot for ReactomePA ORA")
+  ## heat plot
+  hp <- heatplot(e, foldChange = geneList, showCategory = showCategory) + ggplot2::coord_flip() + ggtitle("Heatplot for ReactomePA ORA")
+  ## tree plot
+  e2 <- enrichplot::pairwise_termsim(e)
+  tp <- enrichplot::treeplot(e2, nCluster = nCl, cex_category = ccat, offset_tiplab = 1) + ggtitle("Treeplot for ReactomePA ORA")
+  ## emapplot
+  mp <- clusterProfiler::emapplot(e2, showCategory = showCategory, layout = layout, cex_category = ccat, cex_label_category = label, pie = pie) + ggtitle("Emapplot for ReactomePA ORA")
+  ## upsetplot
+  usp <- enrichplot::upsetplot(e) + ggtitle("Upset plot for ReactomePA ORA")
+  ## cnet plot
+  cp <- clusterProfiler::cnetplot(e, showCategory = showCategory, foldChange = geneList, layout = layout, colorEdge = TRUE, node_label = labeln, cex_category = ccat, cex_label_category = label, cex_label_gene = labelg, color_category='firebrick', categorySize = "pvalue") + ggtitle("Gene-Concept Network plot for ReactomePA ORA")
+  ## output svg
+  dev_svg(plot = bp, file = filebp)
+  dev_svg(plot = dp, file = filedp)
+  dev_svg(plot = hp, file = filehp)
+  dev_svg(plot = tp, file = filetp)
+  dev_svg(plot = mp, file = filemp)
+  dev_svg(plot = usp, file = fileusp)
+  dev_svg(plot = cp, file = filecp)
+}
+## MeSH term enrichment analysis #####
+plot_set_mesh <- function(e, showCategory = 20, layout = "nicely", 
+                          filebp = "bp.svg", filedp = "dp.svg", filehp = "hp.svg", 
+                          filetp = "tp.svg", filemp = "mp.svg", fileusp = "usp.svg", filecp = "cp.svg", 
+                          nCl = 5, ccat = 0.5,
+                          labeln = "all", # "category", "gene", "all", "none"
+                          label = 0.7, labelg = 0.5, pie = "count"){
+  e <- mutate(e, qscore = -log(p.adjust, base=10))
+  bp <- barplot(e, drop=TRUE, showCategory=showCategory, x = "qscore") + ggtitle("Barplot for MeSH ORA")
+  ## dot plot
+  dp <- clusterProfiler::dotplot(e, showCategory=showCategory) + ggtitle("Dotplot for MeSH ORA")
+  ## heat plot
+  hp <- heatplot(e, foldChange = geneList, showCategory = showCategory) + ggplot2::coord_flip() + ggtitle("Heatplot for MeSH ORA")
+  ## tree plot
+  e2 <- enrichplot::pairwise_termsim(e)
+  tp <- enrichplot::treeplot(e2, nCluster = nCl, cex_category = ccat, offset_tiplab = 1) + ggtitle("Treeplot for MeSH ORA")
+  ## emapplot
+  mp <- clusterProfiler::emapplot(e2, showCategory = showCategory, layout = layout, cex_category = ccat, cex_label_category = label, pie = pie) + ggtitle("Emapplot for MeSH ORA")
+  ## upsetplot
+  usp <- enrichplot::upsetplot(e) + ggtitle("Upset plot for MeSH ORA")
+  ## cnet plot
+  cp <- clusterProfiler::cnetplot(e, showCategory = showCategory, foldChange = geneList, layout = layout, colorEdge = TRUE, node_label = labeln, cex_category = ccat, cex_label_category = label, cex_label_gene = labelg, color_category='firebrick', categorySize = "pvalue") + ggtitle("Gene-Concept Network plot for MeSH ORA")
+  ## output svg
+  dev_svg(plot = bp, file = filebp)
+  dev_svg(plot = dp, file = filedp)
+  dev_svg(plot = hp, file = filehp)
+  dev_svg(plot = tp, file = filetp)
+  dev_svg(plot = mp, file = filemp)
+  dev_svg(plot = usp, file = fileusp)
+  dev_svg(plot = cp, file = filecp)
+}
+## Cell marker enrichment analysis #####
+plot_set_ecm <- function(e, showCategory = 20, layout = "nicely", 
+                         filebp = "bp.svg", filedp = "dp.svg", filehp = "hp.svg", 
+                         filetp = "tp.svg", filemp = "mp.svg", fileusp = "usp.svg", filecp = "cp.svg", 
+                         nCl = 5, ccat = 0.5,
+                         labeln = "all", # "category", "gene", "all", "none"
+                         label = 0.7, labelg = 0.5, pie = "count"){
+  e <- mutate(e, qscore = -log(p.adjust, base=10))
+  bp <- barplot(e, drop=TRUE, showCategory=showCategory, x = "qscore") + ggtitle("Barplot for MeSH ORA")
+  ## dot plot
+  dp <- clusterProfiler::dotplot(e, showCategory=showCategory) + ggtitle("Dotplot for MeSH ORA")
+  ## heat plot
+  hp <- heatplot(e, foldChange = geneList, showCategory = showCategory) + ggplot2::coord_flip() + ggtitle("Heatplot for MeSH ORA")
+  ## tree plot
+  e2 <- enrichplot::pairwise_termsim(e)
+  tp <- enrichplot::treeplot(e2, nCluster = nCl, cex_category = ccat, offset_tiplab = 1) + ggtitle("Treeplot for MeSH ORA")
+  ## emapplot
+  mp <- clusterProfiler::emapplot(e2, showCategory = showCategory, layout = layout, cex_category = ccat, cex_label_category = label, pie = pie) + ggtitle("Emapplot for MeSH ORA")
+  ## upsetplot
+  usp <- enrichplot::upsetplot(e) + ggtitle("Upset plot for MeSH ORA")
+  ## cnet plot
+  cp <- clusterProfiler::cnetplot(e, showCategory = showCategory, foldChange = geneList, layout = layout, colorEdge = TRUE, node_label = labeln, cex_category = ccat, cex_label_category = label, cex_label_gene = labelg, color_category='firebrick', categorySize = "pvalue") + ggtitle("Gene-Concept Network plot for MeSH ORA")
+  ## output svg
+  dev_svg(plot = bp, file = filebp)
+  dev_svg(plot = dp, file = filedp)
+  dev_svg(plot = hp, file = filehp)
+  dev_svg(plot = tp, file = filetp)
+  dev_svg(plot = mp, file = filemp)
+  dev_svg(plot = usp, file = fileusp)
+  dev_svg(plot = cp, file = filecp)
+}
+## MSigDb term enrichment analysis #####
+plot_set_emsig <- function(e, showCategory = 20, layout = "nicely", 
+                           filebp = "bp.svg", filedp = "dp.svg", filehp = "hp.svg", 
+                           filetp = "tp.svg", filemp = "mp.svg", fileusp = "usp.svg", filecp = "cp.svg", 
+                           # nCl = 5, 
+                           ccat = 0.5,
+                           labeln = "all", # "category", "gene", "all", "none"
+                           label = 0.7, labelg = 0.5, pie = "count"){
+  e <- try(mutate(e, qscore = -log(p.adjust, base=10)))
+  bp <- try(barplot(e, drop=TRUE, showCategory=showCategory, x = "qscore") + ggtitle("Barplot for MeSH ORA"))
+  ## dot plot
+  dp <- try(clusterProfiler::dotplot(e, showCategory=showCategory) + ggtitle("Dotplot for MeSH ORA"))
+  ## heat plot
+  hp <- try(heatplot(e, foldChange = geneList, showCategory = showCategory) + ggplot2::coord_flip() + ggtitle("Heatplot for MeSH ORA"))
+  ## tree plot
+  e2 <- try(enrichplot::pairwise_termsim(e))
+  tp <- try(enrichplot::treeplot(e2, nCluster = nCl, cex_category = ccat, offset_tiplab = 1) + ggtitle("Treeplot for MeSH ORA"))
+  ## emapplot
+  mp <- try(clusterProfiler::emapplot(e2, showCategory = showCategory, layout = layout, cex_category = ccat, cex_label_category = label, pie = pie) + ggtitle("Emapplot for MeSH ORA"))
+  ## upsetplot
+  usp <- try(enrichplot::upsetplot(e) + ggtitle("Upset plot for MeSH ORA"))
+  ## cnet plot
+  cp <- try(clusterProfiler::cnetplot(e, showCategory = showCategory, foldChange = geneList, layout = layout, colorEdge = TRUE, node_label = labeln, cex_category = ccat, cex_label_category = label, cex_label_gene = labelg, color_category='firebrick', categorySize = "pvalue") + ggtitle("Gene-Concept Network plot for MeSH ORA"))
+  ## output svg
+  try(dev_svg(plot = bp, file = filebp))
+  try(dev_svg(plot = dp, file = filedp))
   try(dev_svg(plot = hp, file = filehp))
   try(dev_svg(plot = tp, file = filetp))
   try(dev_svg(plot = mp, file = filemp))
@@ -103,46 +253,7 @@ plot_set_go <- function(e, showCategory = 20, layout = "nicely",
   try(dev_svg(plot = cp, file = filecp))
 }
 
-plot_set <- function(e, showCategory = 20, layout = "nicely", 
-                     filegp = "gp.svg", filebp = "bp.svg", filedp = "dp.svg", filedp2 = "dp2.svg", filehp = "hp.svg", 
-                     filetp = "tp.svg", filemp = "mp.svg", fileusp = "usp.svg", filecp = "cp.svg", 
-                     nCl = 5, ccat = 0.5,
-                     labeln = "all", # "category", "gene", "all", "none"
-                     label = 0.7, labelg = 0.5, pie = "count"){
-  e <- try(mutate(e, qscore = -log(p.adjust, base=10)))
-  ## goplot
-  # gp <- try(goplot(e) + ggtitle("GOplot"))
-  ## bar plot
-  # bp <- try(barplot(e, drop=TRUE, showCategory=showCategory, x = "qscore") + ggtitle("Barplot"))
-  bp <- try(barplot(e, drop=TRUE, showCategory=showCategory) + ggtitle("Barplot"))
-  ## dot plot
-  # dp <- try(clusterProfiler::dotplot(e, showCategory=showCategory, x = "qscore") + ggtitle("Dotplot"))
-  dp <- try(clusterProfiler::dotplot(e, showCategory=showCategory) + ggtitle("Dotplot"))
-  dp2 <- try(clusterProfiler::dotplot(e, x="group") + facet_grid(~othergroup) + ggtitle("Dotplot"))
-  ## heat plot
-  hp <- try(heatplot(e, foldChange = geneList, showCategory = showCategory) + ggplot2::coord_flip() + ggtitle("Heatplot"))
-  ## tree plot
-  e2 <- try(enrichplot::pairwise_termsim(e))
-  tp <- try(enrichplot::treeplot(e2, nCluster = nCl, cex_category = ccat, offset_tiplab = 1) + ggtitle("Treeplot"))
-  ## emapplot
-  # d <- try(GOSemSim::godata(OrgDb = db, ont = ont))
-  # e2 <- try(enrichplot::pairwise_termsim(e, semData = d,  method="Wang"))
-  mp <- try(clusterProfiler::emapplot(e2, showCategory = showCategory, layout = layout, cex_category = ccat, cex_label_category = label, pie = pie) + ggtitle("Emapplot"))
-  ## upsetplot
-  usp <- try(enrichplot::upsetplot(e) + ggtitle("Upset plot"))
-  ## cnet plot
-  cp <- try(clusterProfiler::cnetplot(e, showCategory = showCategory, foldChange = geneList, layout = layout, colorEdge = TRUE, node_label = labeln, cex_category = ccat, cex_label_category = label, cex_label_gene = labelg, color_category='firebrick', categorySize = "pvalue") + ggtitle("Gene-Concept Network plot"))
-  ## output svg
-  try(dev_svg(plot = gp,  file = filegp))
-  try(dev_svg(plot = bp,  file = filebp))
-  try(dev_svg(plot = dp,  file = filedp))
-  try(dev_svg(plot = dp2, file = filedp2))
-  try(dev_svg(plot = hp,  file = filehp))
-  try(dev_svg(plot = tp,  file = filetp))
-  try(dev_svg(plot = mp,  file = filemp))
-  try(dev_svg(plot = usp, file = fileusp))
-  try(dev_svg(plot = cp,  file = filecp))
-}
+
 ################################################################################
 ## perseus like analysis (3 arguments)
 ## Log2transform,Imputation(MNAR),Subtraction(Median),1wANOVA,2wANOVA,THSD
@@ -405,7 +516,7 @@ read_files <- function(file_list = file_list){
   df_wide <- df_hoge %>% spread(key = fileno, value = V)
   return(df_wide)
 }
-
+################################################################################
 ## read files as a long type data frame
 readfiles <- function(x){
   df <- read.table(x,
@@ -417,19 +528,11 @@ readfiles <- function(x){
   return(df)
 }
 
-# df_hoge <- as.data.frame(NULL)
-# for (i in 1:length(fl)){
-#   df <- readfiles(fl[i])
-#   df <- df %>% mutate(fileno = paste("file_", i, sep=""))
-#   df_hoge <- rbind(df_hoge, df)
-# }
-# df <- as.data.frame(NULL)
-################################################################################
-## extract shock data
-shock_data <- function(df = df, file_no = 1, shock_time = 3.00){
-  file_no <- file_no
-  shock_time = shock_time
-  d <- df %>% filter(time >= shock_time-3 & time <= shock_time+10) %>% dplyr::select(time, file_no+1)
-  return(d)
+df_hoge <- as.data.frame(NULL)
+for (i in 1:length(fl)){
+  df <- readfiles(fl[i])
+  df <- df %>% mutate(fileno = paste("file_", i, sep=""))
+  df_hoge <- rbind(df_hoge, df)
 }
+df <- as.data.frame(NULL)
 ################################################################################

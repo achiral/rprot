@@ -17,9 +17,13 @@ require(clusterProfiler)      # enrichment analysis
 require(DESeq2)
 require(DOSE)
 require(dplyr)                # select function
+require(plyr)
+require(europepmc)
+
 # require(fontregisterer)       # (https://ill-identified.hatenablog.com/entry/2020/10/03/200618#ux3069ux306eosux3067ux3082ux3060ux3044ux305fux3044ux540cux3058ux3088ux3046ux306bux3067ux304dux308bux65b9ux6cd5)
 # require(ggplot2)
 require(ggnewscale)           # enrichment map plot
+require(ggupset)
 require(GO.db)                # gene ontology
 require(gridExtra)            # svg
 require(Hmisc)
@@ -27,6 +31,7 @@ require(MeSHDbi)
 require(meshes)
 require(MeSH.Hsa.eg.db) # BioC 2.14-3.13
 require(MeSH.Mmu.eg.db) # BioC 2.14-3.13
+require(msigdbr)
 require(MSstats)
 require(multcomp)             # multiple comparison
 require(openxlsx)             # in/output xlsx (write.xlsx)
