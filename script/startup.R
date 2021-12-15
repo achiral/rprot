@@ -16,17 +16,19 @@ require(AnnotationHub)
 require(clusterProfiler)      # enrichment analysis
 require(DESeq2)
 require(DOSE)
-require(dplyr)                # select function
-require(plyr)
+require(plyr)                 # plyr -> dplyr
+require(dplyr)                # plyr -> dplyr, select function
 require(europepmc)
 
 # require(fontregisterer)       # (https://ill-identified.hatenablog.com/entry/2020/10/03/200618#ux3069ux306eosux3067ux3082ux3060ux3044ux305fux3044ux540cux3058ux3088ux3046ux306bux3067ux304dux308bux65b9ux6cd5)
 # require(ggplot2)
+require(GGally)
 require(ggnewscale)           # enrichment map plot
 require(ggupset)
 require(GO.db)                # gene ontology
 require(gridExtra)            # svg
 require(Hmisc)
+require(lubridate)
 require(MeSHDbi)
 require(meshes)
 require(MeSH.Hsa.eg.db) # BioC 2.14-3.13
@@ -38,11 +40,14 @@ require(openxlsx)             # in/output xlsx (write.xlsx)
 require(org.Hs.eg.db)         # human
 require(org.Mm.eg.db)         # mouse
 require(PANTHER.db)           # PANTHER data base
+require(patchwork)
 require(pathview)
 require(ReactomePA)
+require(tictoc)
 require(readxl)               # input xlsx (read_excel)
 # require(rvg)                # error
 # require(stringr)
+require(stats)
 require(SummarizedExperiment) # DEP
 # require(systemfonts)          # error
 # require(svglite)            # error

@@ -1,70 +1,29 @@
 # R packages
 #############################################################
-# install packages
-if (!requireNamespace("BiocManager", quietly = TRUE))
-  install.packages("BiocManager", repos='http://cran.us.r-project.org')
-BiocManager::install()                              # update
-BiocManager::install("airway")
-BiocManager::install("aLFQ")
-BiocManager::install("BaylorEdPsych")               # NA
-BiocManager::install("biomaRt")
-BiocManager::install("clusterProfiler")             # enrichmant analysis
-BiocManager::install("ComplexHeatmap")              # heatmap
-BiocManager::install("DEP")                       # NA, proteomics
-BiocManager::install("DESeq")
-BiocManager::install("DESeq2")
-BiocManager::install("EnhancedVolcano")
-biocManager::install("DOSE")
-BiocManager::install("genefilter")                  # heatmap
-BiocManager::install("gmm")                         # NA, DEP
-BiocManager::install("GO.db")
-BiocManager::install("gplots")                      # heatmap
-BiocManager::install("imsbInfer")                   # NA
-BiocManager::install("limma")                       # DEP
-BiocManager::install("loadTransitonsMSExperiment")  # NA
-BiocManager::install("MeSH.Hsa.eg.db")              # BioC 2.14-3.13
-BiocManager::install("MeSH.Mmu.eg.db")              # BioC 2.14-3.13
-BiocManager::install("MeSHDbi")                     # BioC 3.14 (Nov. 2021, with R-4.2.0)
-BiocManager::install("meshes")
-BiocManager::install("mouse4302.db")
-BiocManager::install("msigdbr")
-BiocManager::install("MSstats")
-BiocManager::install("mzR")
-BiocManager::install("org.Hs.eg.db")
-BiocManager::install("org.Mm.eg.db")
-BiocManager::install("PANTHER.db")
-BiocManager::install("pathview")
-BiocManager::install("PECA")
-BiocManager::install("RCyjs")   # cyREST, Cytoscape
-BiocManager::install("ReactomePA")
-BiocManager::install("RforProteomics")
-BiocManager::install("readinteger_binary")
-BiocManager::install("SummarizedExperiment")      # DEP
-BiocManager::install("SWATH2stats")
-
-devtools::install_github("GuangchuangYu/DOSE")    # enrichMap
-
-remotes::install_github("Gedevan-Aleksizde/fontregisterer", repos = NULL, type = "source")
 
 
+## install.packages()
 install.packages("agricolae")                       
 install.packages("BH")
 install.packages("BiocManager")                   # done
 install.packages("cowplot")
-install.packages("data.table")                      # MSstat
+install.packages("data.table")                    # MSstat
 install.packages("devtools")
-install.packages("doSNOW")                          # MSstat
+install.packages("doSNOW")                        # MSstat
 
 install.packages("ddply")
 install.packages("dplyr")                         # tidyverse, MSstat
 
 install.packages("europepmc")
 
-install.packages("foreach")                         # MSstat
+install.packages("foreach")                       # MSstat
+
+install.packages("GGally")
+
 install.packages("ggcorrplot") 
-install.packages("ggnewscale")                      # enrichment analysis
-install.packages("ggrepel")                         # MSstat
-install.packages("ggplot2")                         # MSstat
+install.packages("ggnewscale")                    # enrichment analysis
+install.packages("ggrepel")                       # MSstat
+install.packages("ggplot2")                       # MSstat
 install.packages("ggThemeAssist")
 
 install.packages("ggupset")
@@ -76,6 +35,7 @@ install.packages("Hmisc")                           # llist()
 install.packages("imputeMissings")
 install.packages("lattice")                         # done, limma
 install.packages("lme4")                            # MSstat
+install.packages("Matrix", dependencies=TRUE)
 install.packages("mgcv")                            # done, limma
 install.packages("mice")
 install.packages("minpack.lm")                      # MSstat
@@ -85,6 +45,9 @@ install.packages("multcomp")                      # done, multiple comparison
 install.packages("openxlsx")                      # done, exlx input
 install.packages("pacman")
 install.packages("palmerpenguins")                # demo
+
+install.packages("patchwork")
+
 install.packages("randomForest")                    # MSstat
 install.packages("ranger")
 install.packages("remotes")
@@ -98,6 +61,9 @@ install.packages("rvg")                             # svg（https://www.karada-g
 install.packages("S4Vectors")                     # done, DEP/SummarizedExperiment
 install.packages("sandwich")                      # done, gmm
 install.packages("scales")                          # muted()
+
+install.packages("sessioninfo")                     # error
+
 install.packages("sets")                            # set operation
 install.packages("sgof")                            # bh(), Multiple Hypothesis Testing
 install.packages("snow")                            # MSstat
@@ -106,6 +72,9 @@ install.packages("survival")                        # MSstat
 install.packages("svglite")                       # svg(https://ill-identified.hatenablog.com/entry/2020/10/03/200618#svg-ux3067ux306eux4fddux5b58)
 install.packages("systemfonts")                   # rvg()
 install.packages("tablaxlsx")                     # NA, xlsx table output
+
+install.packages("tictoc")
+
 install.packages("tidyr")                         # MSstat
 install.packages("tidyverse")                     # done, 
 install.packages("VIM")
@@ -113,6 +82,61 @@ install.packages("writexl")                       # done, writexl output
 install.packages("xlsx")                          # done, xlsx output
 # install.packages("xlsx2")                         # NA, xlsx output
 install.packages("XLConnect")                       # xlsx in/output
+
+## BioConductor #####
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager", repos='http://cran.us.r-project.org')
+# if (!require("BiocManager", quietly = TRUE))
+#   install.packages("BiocManager")
+# BiocManager::install(version = "3.13", force = TRUE)
+BiocManager::install(version = "3.14", force = TRUE)
+# BiocManager::install()                              # update
+BiocManager::install("airway")
+BiocManager::install("AnnotationHub", force = TRUE)
+BiocManager::install("aLFQ")
+BiocManager::install("BaylorEdPsych")               # NA
+BiocManager::install("BiocFileCache")
+BiocManager::install("biomaRt")
+BiocManager::install("clusterProfiler")             # enrichmant analysis
+BiocManager::install("ComplexHeatmap")              # heatmap
+BiocManager::install("DEP", force = TRUE)           # NA, proteomics
+BiocManager::install("DESeq", force = TRUE)
+BiocManager::install("DESeq2", force = TRUE)
+BiocManager::install("EnhancedVolcano")
+BiocManager::install("DOSE")
+BiocManager::install("genefilter")                  # heatmap
+BiocManager::install("gmm")                         # NA, DEP
+BiocManager::install("GO.db")
+BiocManager::install("gplots")                      # heatmap
+BiocManager::install("imsbInfer")                   # NA
+BiocManager::install("limma")                       # DEP
+BiocManager::install("loadTransitonsMSExperiment")  # NA
+BiocManager::install("MeSHDbi")                     # BioC 3.14 (Nov. 2021, with R-4.2.0)
+BiocManager::install("meshes", force = TRUE)
+BiocManager::install("MeSH.Hsa.eg.db", force = TRUE)              # BioC 2.14-3.13
+BiocManager::install("MeSH.Mmu.eg.db", force = TRUE)              # BioC 2.14-3.13
+BiocManager::install("mouse4302.db")
+BiocManager::install("msigdbr")
+BiocManager::install("MSstats", force = TRUE)                     # NA(MBP14)
+BiocManager::install("mzR")
+BiocManager::install("org.Hs.eg.db", force = TRUE)  # NA(MBP14)
+BiocManager::install("org.Mm.eg.db", force = TRUE)  # NA(MBP14)
+BiocManager::install("PANTHER.db", force = TRUE)    # NA(MBP14)
+BiocManager::install("pathview")
+BiocManager::install("PECA")
+BiocManager::install("RCyjs")   # cyREST, Cytoscape
+BiocManager::install("ReactomePA", force = TRUE)
+BiocManager::install("RforProteomics")
+BiocManager::install("rtracklayer")
+BiocManager::install("readinteger_binary")
+BiocManager::install("SummarizedExperiment")      # DEP
+BiocManager::install("SWATH2stats")
+
+## GitHub, devtools #####
+devtools::install_github("GuangchuangYu/DOSE")    # enrichMap
+
+## GitHub, remotes #####
+remotes::install_github("Gedevan-Aleksizde/fontregisterer", repos = NULL, type = "source")
 #############################################################
 # Load BioConductor Packages
 library(airway)

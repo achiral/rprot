@@ -8,28 +8,36 @@
 #                       "PANTHER.db", "biomaRt"))
 ################################################################################
 rm(list = ls(all = TRUE))
-source("/home/rstudio/rproject/script/archive/functions.R")
+# source("/home/rstudio/rproject/script/archive/functions.R")
+source("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/script/archive/functions.R")
 detach_all()
-source("/home/rstudio/rproject/script/startup.R")
+# source("/home/rstudio/rproject/script/startup.R")
+source("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/script/startup.R")
 ################################################################################
 # dirname = dir.choose()
 # filename = file.choose()
 ################################################################################
+## $$$$$ set data table directory $$$$$ #####
 getwd()
-setwd("/home/rstudio/rproject")
 # annotation table
-setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/AMY")
+# setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/AMY")
+setwd("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/data/Perseus_Like_Analysis/AMY")
 dat_a <- read_excel("SWATH.xlsx", 2)
-setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/HIP")
-dat_h <- read_excel("SWATH.xlsx", 2)
-setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/NAc")
-dat_n <- read_excel("SWATH.xlsx", 2)
-setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/PFC")
-dat_p <- read_excel("SWATH.xlsx", 2)
-setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/STR")
-dat_s <- read_excel("SWATH.xlsx", 2)
-setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/Heart")
+# setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/Heart")
+setwd("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/data/Perseus_Like_Analysis/Heart")
 dat_ht <- read_excel("SWATH.xlsx", 2)
+# setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/HIP")
+setwd("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/data/Perseus_Like_Analysis/HIP")
+dat_h <- read_excel("SWATH.xlsx", 2)
+# setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/NAc")
+setwd("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/data/Perseus_Like_Analysis/NAc")
+dat_n <- read_excel("SWATH.xlsx", 2)
+# setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/PFC")
+setwd("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/data/Perseus_Like_Analysis/PFC")
+dat_p <- read_excel("SWATH.xlsx", 2)
+# setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/STR")
+setwd("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/data/Perseus_Like_Analysis/STR")
+dat_s <- read_excel("SWATH.xlsx", 2)
 ################################################################################
 #DIR <- "/home/rstudio/rproject/data/Perseus_Like_Analysis/Other3"  # set path
 #dir.create(DIR, showWarnings = T, recursive = T)                   # make directory
@@ -39,7 +47,12 @@ dat_ht <- read_excel("SWATH.xlsx", 2)
 # file.rename("temp2.txt", "temp3.txt")                            # rename file
 # file.remove("temp1.txt","temp2.txt","temp3.txt")                 # remove file
 ################################################################################
-setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/Other")
+setwd("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/data/Perseus_Like_Analysis")
+# setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/Other")
+if(!dir.exists("Other4")){
+    dir.create("Other4", recursive = T)
+}
+setwd("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/data/Perseus_Like_Analysis/Other4")
 getwd()
 dir() 
 
@@ -62,7 +75,7 @@ xxx <- xx %>% distinct(Protein.IDs,.keep_all=TRUE)
 # Search Duplication
 xxx$Protein.IDs %>% duplicated() %>% any()
 # Duplication table
-xxx %>% group_by(Protein.IDs) %>% summarize(frequency = n()) %>% arrange(desc(frequency)) %>% filter(frequency > 1)
+xxx %>% dplyr::group_by(Protein.IDs) %>% dplyr::summarize(frequency = n()) %>% dplyr::arrange(desc(frequency)) %>% dplyr::filter(frequency > 1)
 ################################################################################
 ################################################################################
 ################################################################################
@@ -148,23 +161,33 @@ write.xlsx(smp, file = "anno.xlsx", overwrite = T)
 ################################################################################
 ################################################################################
 rm(list = ls(all = TRUE))
-source("/home/rstudio/rproject/script/archive/functions.R")        # load functions
-source("/home/rstudio/rproject/script/archive/functions_DEPpkg.R") # load DEPpkg functions
+# source("/home/rstudio/rproject/script/archive/functions.R")                               # load functions
+source("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/script/archive/functions.R")        # load functions
+# source("/home/rstudio/rproject/script/archive/functions_DEPpkg.R")                        # load DEPpkg functions
+source("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/script/archive/functions_DEPpkg.R") # load DEPpkg functions
 detach_all()
-source("/home/rstudio/rproject/script/startup.R")                  # load packages
+# source("/home/rstudio/rproject/script/startup.R")                                         # load packages
+source("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/script/startup.R")                  # load packages
 ################################################################################
-setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/Other") # set directory
-anno <- read_excel("anno.xlsx", 1)                               # annotation
-setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/AMY")   # set directory
-PLA2()                                                           # analysis
-setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/HIP")   # set directory
-PLA2()                                                           # analysis
-setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/NAc")   # set directory
-PLA2()                                                           # analysis
-setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/PFC")   # set directory
-PLA2()                                                           # analysis
-setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/STR")   # set directory
-PLA2()                                                           # analysis
-setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/Heart") # set directory
-PLA2()                                                           # analysis
+# setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/Other")                          # set directory
+setwd("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/data/Perseus_Like_Analysis/Other4")  # set directory
+anno <- read_excel("anno.xlsx", 1)                                                          # annotation
+# setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/AMY")                            # set directory
+setwd("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/data/Perseus_Like_Analysis/AMY")     # set directory
+PLA2()                                                                                      # analysis
+# setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/HIP")                            # set directory
+setwd("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/data/Perseus_Like_Analysis/HIP")     # set directory
+PLA2()                                                                                      # analysis
+# setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/NAc")                            # set directory
+setwd("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/data/Perseus_Like_Analysis/NAc")     # set directory
+PLA2()                                                                                      # analysis
+# setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/PFC")                            # set directory
+setwd("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/data/Perseus_Like_Analysis/PFC")     # set directory
+PLA2()                                                                                      # analysis
+# setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/STR")                            # set directory
+setwd("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/data/Perseus_Like_Analysis/STR")     # set directory
+PLA2()                                                                                      # analysis
+# setwd("/home/rstudio/rproject/data/Perseus_Like_Analysis/Heart")                          # set directory
+setwd("/Users/user/Dropbox/GitHub/local/Docker/R/rprot/data/Perseus_Like_Analysis/Heart")   # set directory
+PLA2()                                                                                      # analysis
 ################################################################################
